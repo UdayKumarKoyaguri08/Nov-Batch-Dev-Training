@@ -1,26 +1,37 @@
-public class UpdateContactDiscription {
-    
-    public void UpdateContactDiscriptions()
+public class UpdateContactDiscription implements Database.Batchable<sObject> {
+   
+    public Database.QueryLocator start(Database.BatchableContext bc)
     {
-        List<Account> oAccount= [SELECT Id,Name,Description FROM Account];
+        
+        String query = 'SELECT Account.Id,Account.Name, Account.Description,Title,Description FROM Contact WHERE Account.Name!=null';
+        return Database.getQueryLocator(query);
+        
+    }
+    public void execute(Database.BatchableContext bc, List<Contact> contacts)
+    {
+        List<Account> oAccount=[SELECT Id,Name,Description FROM Account];
         for(Account acc:oAccount)
         {
-            List<Contact> oContact=[SELECT Id,AccountId,Title From Contact];
-            For(Contact con:oContact)
+		    if (contacts != null)        
             {
-                if(acc.Id==con.AccountId)
-                {
+              for(Contact con : contacts)
+              {
+                 if(acc.Id==con.AccountId)
+                 {
                     if(con.Title == null || acc.Description == null){
                         con.Title = ' ';
                         acc.Description = ' ';
                     }
                     con.Description =con.Title+' '+'of'+' '+acc.Name +' : '+acc.Description;
                     update con;
-                    
-                }
+                 }
+              }
             }
         }
-        
-   }
+    }
+    public void finish(Database.BatchableContext bc)
+    {
+		
+    }
 
 }
