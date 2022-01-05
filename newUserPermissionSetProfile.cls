@@ -15,7 +15,7 @@ public class newUserPermissionSetProfile {
             {
                 if(per.Name == 'Marketing_User_Permissions'&& pro.Name == 'Custom: Marketing Profile')
                 {
-                    
+
                     PermissionSetAssignment p =new PermissionSetAssignment();
                     p.PermissionSetId = per.Id;
                     p.AssigneeId=u.Id;
